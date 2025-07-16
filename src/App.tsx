@@ -3,6 +3,7 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import Navbar from "./components/Navbar";
 import { WalletProvider } from "./contexts/WalletContext";
+import Admin from "./pages/Admin";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
+            <Route path="/admin" element={<Admin />} />
           </Routes>
         </main>
       </div>
