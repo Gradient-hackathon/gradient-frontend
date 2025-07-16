@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useWallet } from "../hooks/useWallet";
+import { Button } from "@/components/ui/button";
+import { mockData } from "@/utilts/mockData";
 
-interface Employee {
+export interface Employee {
   id: string;
   walletAddress: string;
   amount: number;
@@ -14,38 +16,7 @@ interface EmployeeForm {
 
 export default function Admin() {
   const { isConnected, formatAddress } = useWallet();
-  const [employees, setEmployees] = useState<Employee[]>([
-    {
-      id: "1",
-      walletAddress: "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
-      amount: 5000.0,
-    },
-    {
-      id: "2",
-      walletAddress: "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
-      amount: 3500.0,
-    },
-    {
-      id: "3",
-      walletAddress: "5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y",
-      amount: 4200.0,
-    },
-    {
-      id: "4",
-      walletAddress: "5DAAnrj7VHTznn2AWBemMuyBwZWs6FNFjdyVXUeYum3PTXFy",
-      amount: 2800.0,
-    },
-    {
-      id: "5",
-      walletAddress: "5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw",
-      amount: 6500.0,
-    },
-    {
-      id: "6",
-      walletAddress: "5CiPPseXPECbkjWCa6MnjNokrgYjMqmKndv2rSnekmSK2DjL",
-      amount: 3750.0,
-    },
-  ]);
+  const [employees, setEmployees] = useState<Employee[]>(mockData);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isAdding, setIsAdding] = useState(false);
   const [newEmployee, setNewEmployee] = useState<EmployeeForm>({
@@ -156,9 +127,23 @@ export default function Admin() {
       </h1>
 
       <div className="space-y-6">
-        <p className="text-lg text-muted-foreground">
-          Manage employee wallets and USDC salary allocations
-        </p>
+        <div className="flex items-center justify-between">
+          <p className="text-lg text-muted-foreground">
+            Manage employee wallets and USDC salary allocations
+          </p>
+          <Button
+            onClick={() => {
+              const transactionData = employees.map((emp) => ({
+                address: emp.walletAddress,
+                amount: emp.amount,
+              }));
+              console.log(JSON.stringify(transactionData, null, 2));
+            }}
+            className="cursor-pointer bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 to-purple-500 text-white px-6 py-2 rounded-lg hover:opacity-90 transition-opacity font-medium"
+          >
+            PUBLISH MERKLE TREE
+          </Button>
+        </div>
 
         {/* Summary Section */}
         <div className="bg-card border border-border rounded-lg p-6">
