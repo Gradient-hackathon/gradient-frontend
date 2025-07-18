@@ -19,6 +19,7 @@ export default function Admin() {
   const [employees, setEmployees] = useState<Employee[]>(mockData);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isAdding, setIsAdding] = useState(false);
+  const [showPublishModal, setShowPublishModal] = useState(false);
   const [newEmployee, setNewEmployee] = useState<EmployeeForm>({
     walletAddress: "",
     amount: "",
@@ -105,6 +106,18 @@ export default function Admin() {
     }
   };
 
+  const handlePublishMerkleTree = () => {
+    const transactionData = employees.map((emp) => ({
+      address: emp.walletAddress,
+      amount: emp.amount,
+    }));
+    console.log(
+      "Publishing Merkle Tree with data:",
+      JSON.stringify(transactionData, null, 2)
+    );
+    setShowPublishModal(true);
+  };
+
   if (!isConnected) {
     return (
       <div className="py-8">
@@ -132,13 +145,7 @@ export default function Admin() {
             Manage employee wallets and USDC salary allocations
           </p>
           <Button
-            onClick={() => {
-              const transactionData = employees.map((emp) => ({
-                address: emp.walletAddress,
-                amount: emp.amount,
-              }));
-              console.log(JSON.stringify(transactionData, null, 2));
-            }}
+            onClick={handlePublishMerkleTree}
             className="cursor-pointer bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 to-purple-500 text-white px-6 py-2 rounded-lg hover:opacity-90 transition-opacity font-medium"
           >
             PUBLISH MERKLE TREE
@@ -366,6 +373,70 @@ export default function Admin() {
           )}
         </div>
       </div>
+
+      {/* Success Modal */}
+      {showPublishModal && (
+        <div className="fixed inset-0 backdrop-blur-sm bg-black/20 flex items-center justify-center z-50">
+          <div className="bg-card border border-border rounded-lg p-8 max-w-md w-full mx-4 relative">
+            <div className="text-center">
+              <div className="mb-4">
+                <div className="mx-auto w-16 h-16 bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center mb-4">
+                  <svg
+                    className="w-8 h-8 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-primary mb-2">
+                  🎉 Congratulations!
+                </h3>
+                <p className="text-lg text-muted-foreground mb-4">
+                  Merkle tree has been published successfully!
+                </p>
+                <div className="bg-muted/50 border border-border rounded-lg p-4 mb-6">
+                  <p className="text-sm text-muted-foreground mb-2">
+                    Transaction Summary:
+                  </p>
+                  <div className="text-left space-y-1">
+                    <div className="flex justify-between">
+                      <span className="text-sm">Total Employees:</span>
+                      <span className="text-sm font-semibold">
+                        {employees.length}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm">Total Amount:</span>
+                      <span className="text-sm font-semibold">
+                        $
+                        {employees
+                          .reduce((sum, emp) => sum + emp.amount, 0)
+                          .toFixed(2)}{" "}
+                        USDC
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="flex gap-2 justify-center">
+                <button
+                  onClick={() => setShowPublishModal(false)}
+                  className="cursor-pointer bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 to-purple-500 text-white px-6 py-2 rounded-lg hover:opacity-90 transition-opacity font-medium"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

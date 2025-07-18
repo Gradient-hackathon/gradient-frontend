@@ -31,4 +31,9 @@ export const mockData: Employee[] = [
     walletAddress: "5CiPPseXPECbkjWCa6MnjNokrgYjMqmKndv2rSnekmSK2DjL",
     amount: 3750.0,
   },
+  {
+    id: "7",
+    walletAddress: "5GRGyKw52GtBY5GnVM73dgmyYJURNB2tkEepam7uyv3Vu4rg",
+    amount: 6000.0,
+  },
 ];

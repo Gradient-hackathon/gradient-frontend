@@ -19,6 +19,7 @@ export default function Receiver() {
   const [verificationResult, setVerificationResult] =
     useState<VerificationResult | null>(null);
   const [hasVerified, setHasVerified] = useState(false);
+  const [showClaimModal, setShowClaimModal] = useState(false);
 
   const generateMockProof = (): string[] => {
     // Generate mock merkle proof hashes
@@ -69,6 +70,10 @@ export default function Receiver() {
     if (account?.address) {
       setAddressToVerify(account.address);
     }
+  };
+
+  const handleClaim = () => {
+    setShowClaimModal(true);
   };
 
   if (!isConnected) {
@@ -161,21 +166,31 @@ export default function Receiver() {
                   : "border-red-500 bg-red-50 dark:bg-red-950"
               }`}
             >
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-2xl">
-                  {verificationResult.isVerified ? "✅" : "❌"}
-                </span>
-                <h4
-                  className={`font-bold text-lg ${
-                    verificationResult.isVerified
-                      ? "text-green-700 dark:text-green-300"
-                      : "text-red-700 dark:text-red-300"
-                  }`}
-                >
-                  {verificationResult.isVerified
-                    ? "Verification Successful!"
-                    : "Address Not Found"}
-                </h4>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl">
+                    {verificationResult.isVerified ? "✅" : "❌"}
+                  </span>
+                  <h4
+                    className={`font-bold text-lg ${
+                      verificationResult.isVerified
+                        ? "text-green-700 dark:text-green-300"
+                        : "text-red-700 dark:text-red-300"
+                    }`}
+                  >
+                    {verificationResult.isVerified
+                      ? "Verification Successful!"
+                      : "Address Not Found"}
+                  </h4>
+                </div>
+                {verificationResult.isVerified && (
+                  <button
+                    onClick={handleClaim}
+                    className="bg-gradient-to-r from-green-500 to-blue-500 text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity font-medium"
+                  >
+                    Claimed
+                  </button>
+                )}
               </div>
               <p
                 className={`${
@@ -284,6 +299,73 @@ export default function Receiver() {
           </div>
         </div>
       </div>
+
+      {/* Claim Modal */}
+      {showClaimModal && (
+        <div className="fixed inset-0 backdrop-blur-sm bg-black/20 flex items-center justify-center z-50">
+          <div className="bg-card border border-border rounded-lg p-8 max-w-md w-full mx-4 relative">
+            <div className="text-center">
+              <div className="mb-4">
+                <div className="mx-auto w-16 h-16 bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center mb-4">
+                  <svg
+                    className="w-8 h-8 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
+                    />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-primary mb-2">
+                  🚀 Processing Claim
+                </h3>
+                <p className="text-lg text-muted-foreground mb-4">
+                  Transferring tokens to you...
+                </p>
+                <div className="bg-muted/50 border border-border rounded-lg p-4 mb-6">
+                  <p className="text-sm text-muted-foreground mb-2">
+                    Transaction Details:
+                  </p>
+                  <div className="text-left space-y-1">
+                    <div className="flex justify-between">
+                      <span className="text-sm">Recipient:</span>
+                      <span className="text-sm font-semibold">
+                        {verificationResult &&
+                          formatAddress(verificationResult.address)}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm">Amount:</span>
+                      <span className="text-sm font-semibold">
+                        ${verificationResult?.amount.toFixed(2)} USDC
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm">Status:</span>
+                      <span className="text-sm font-semibold text-green-600">
+                        Processing...RECEIVED
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="flex gap-2 justify-center">
+                <button
+                  onClick={() => setShowClaimModal(false)}
+                  className="cursor-pointer bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 to-purple-500 text-white px-6 py-2 rounded-lg hover:opacity-90 transition-opacity font-medium"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
