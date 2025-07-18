@@ -188,7 +188,7 @@ export default function Receiver() {
                     onClick={handleClaim}
                     className="bg-gradient-to-r from-green-500 to-blue-500 text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity font-medium"
                   >
-                    Claimed
+                    Claim
                   </button>
                 )}
               </div>
